@@ -14,7 +14,7 @@ Minimal backend foundation for VN LMS.
 ### 1. Start dependencies
 
 ``` bash
-npm run deps:up
+docker compose up
 ```
 
 -   Postgres → localhost:5433\
