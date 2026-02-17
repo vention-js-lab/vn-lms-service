@@ -30,7 +30,7 @@ cp .env.example .env
 
 ``` bash
 npm install
-npm run start:dev
+npm run dev
 ```
 
 ## Health Check
