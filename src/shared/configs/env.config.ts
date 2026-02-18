@@ -1,9 +1,7 @@
 import { z } from 'zod';
 
 export const envConfigSchema = z.object({
-  NODE_ENV: z
-    .enum(['development', 'test', 'production'])
-    .default('development'),
+  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
   APP_PORT: z.coerce.number().int().min(1).max(65535).default(8050),
 
   DB_HOST: z.string().min(1),
@@ -28,9 +26,7 @@ export function validateEnv(config: unknown): EnvConfig {
         message: issue.message,
       };
     });
-    throw new Error(
-      `Invalid environment configuration: ${JSON.stringify(errorMessage)}`,
-    );
+    throw new Error(`Invalid environment configuration: ${JSON.stringify(errorMessage)}`);
   }
   return parsed.data;
 }
