@@ -13,9 +13,6 @@ const ignoreConfig = {
   ignores: ['node_modules/', 'coverage/', 'public/', 'eslint.config.mjs', 'prettier.config.cjs'],
 };
 
-// /** @type {import('eslint').Linter.Config} */
-// const tanstackQueryConfigs = pluginTanstackQuery.configs['flat/recommended'];
-
 /** @type {import('eslint').Linter.Config}*/
 const mainConfig = {
   files: ['**/*.ts'],
