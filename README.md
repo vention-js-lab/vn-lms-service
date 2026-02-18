@@ -6,8 +6,7 @@ Minimal backend foundation for VN LMS.
 
 -   NestJS
 -   Zod (env validation)
--   Postgres 16 (Docker)
--   MailHog (local email testing)
+-   Postgres 17 (Docker)
 
 ## Local Setup
 

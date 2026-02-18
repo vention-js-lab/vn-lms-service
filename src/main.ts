@@ -1,7 +1,7 @@
 import { NestFactory } from '@nestjs/core';
-import { AppModule } from './app.module';
+import { AppModule } from '#/app.module';
 import { ConfigService } from '@nestjs/config';
-import { EnvConfig } from './shared/configs/env.config';
+import { EnvConfig } from '#/shared/configs/env.config';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -10,7 +10,7 @@ async function bootstrap() {
 
   app.setGlobalPrefix('v1');
 
-  const appPort = configService.get('APP_PORT', { infer: true });
+  const appPort: number = configService.get('APP_PORT', { infer: true });
   await app.listen(appPort, '0.0.0.0');
 }
 bootstrap();
