@@ -4,38 +4,38 @@ Minimal backend foundation for VN LMS.
 
 ## Stack
 
--   NestJS
--   Zod (env validation)
--   Postgres 16 (Docker)
--   MailHog (local email testing)
+- NestJS
+- Zod (env validation)
+- Postgres 16 (Docker)
+- MailHog (local email testing)
 
 ## Local Setup
 
 ### 1. Start dependencies
 
-``` bash
+```bash
 docker compose up
 ```
 
--   Postgres → localhost:5433\
--   MailHog UI → http://localhost:8025
+- Postgres → localhost:5433\
+- MailHog UI → http://localhost:8025
 
 ### 2. Configure environment
 
-``` bash
+```bash
 cp .env.example .env
 ```
 
 ### 3. Start API
 
-``` bash
+```bash
 npm install
 npm run dev
 ```
 
 ## Health Check
 
-``` bash
+```bash
 GET http://localhost:8050/v1/health
 ```
 
