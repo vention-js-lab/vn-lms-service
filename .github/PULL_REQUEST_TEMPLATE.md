@@ -1,16 +1,19 @@
-## What
+# PR Description
 
--
+## 📌 Related Task
 
-## Why
+[Jira-123](PASTE_JIRA_LINK_HERE)
 
--
+---
 
-## How tested
+## 📋 Summary of Changes
 
-- [ ] Local run
-- [ ] Health endpoint works
+Brief description of what was implemented.
 
-## Notes
+### Screenshots
 
--
+(Add screenshots here if applicable)
+
+### Video
+
+(Add video link here if applicable)

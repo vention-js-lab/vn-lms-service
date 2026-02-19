@@ -1,13 +1,13 @@
 services:
   postgres:
-    image: postgres:16-alpine
+    image: postgres:17.8
     container_name: vn-lms-postgres
-    environment:
-      POSTGRES_DB: vn_lms
-      POSTGRES_USER: vn_lms
-      POSTGRES_PASSWORD: vn_lms_password
     ports:
-      - '5433:5433'
+      - '${DATABASE_PORT}:5432'
+    environment:
+      POSTGRES_USER: ${DATABASE_USER}
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD}
+      POSTGRES_DB: ${DATABASE_NAME}
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
@@ -20,8 +20,8 @@ services:
     image: mailhog/mailhog:v1.0.1
     container_name: vn-lms-mailhog
     ports:
-      - '1025:1025' # SMTP
-      - '8025:8025' # Web UI
+      - '${MAIL_SMTP_PORT}:1025'
+      - '${MAIL_WEB_PORT}:8025'
 
 volumes:
   pgdata:
