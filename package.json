@@ -16,13 +16,22 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "db:migration:create": "sequelize-cli migration:generate --name",
+    "db:prisma:sync": "prisma db pull && prisma generate",
+    "db:up": "sequelize-cli db:migrate && npm run db:prisma:sync",
+    "db:down": "sequelize-cli db:migrate:undo && npm run db:prisma:sync",
+    "db:down:all": "sequelize-cli db:migrate:undo:all && npm run db:prisma:sync"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.14",
     "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^11.1.14",
     "@nestjs/platform-express": "^11.1.14",
+    "@prisma/adapter-pg": "^7.4.0",
+    "@prisma/client": "^7.4.0",
+    "pg": "^8.18.0",
+    "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.2.2",
     "rxjs": "^7.8.2",
     "zod": "^4.3.6"
@@ -51,6 +60,9 @@
     "jest": "^30.2.0",
     "lint-staged": "^16.2.7",
     "prettier": "^3.8.1",
+    "prisma": "^7.4.0",
+    "sequelize": "^6.37.7",
+    "sequelize-cli": "^6.6.5",
     "source-map-support": "^0.5.21",
     "supertest": "^7.2.2",
     "ts-jest": "^29.4.6",
