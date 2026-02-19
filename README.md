@@ -58,7 +58,7 @@ Application fails fast if configuration is invalid.
 Create new migration with running:
 
 ```bash
-npm run db:migration:create -- --name <migration-name>
+npm run db:migration:create <migration-name>
 ```
 Edit the generated migration file in `src/migrations` to define the schema changes.
 
