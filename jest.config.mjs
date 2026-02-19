@@ -11,6 +11,7 @@ const config = {
   },
   testEnvironment: 'node',
   testRegex: '.*\\.spec\\.ts$',
+  passWithNoTests: true,
 
   // ====  Paths ==== //
   rootDir: 'src',
