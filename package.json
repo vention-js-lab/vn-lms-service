@@ -30,6 +30,7 @@
     "@nestjs/platform-express": "^11.1.14",
     "@prisma/adapter-pg": "^7.4.0",
     "@prisma/client": "^7.4.0",
+    "dotenv": "^17.3.1",
     "pg": "^8.18.0",
     "pg-hstore": "^2.3.4",
     "reflect-metadata": "^0.2.2",
