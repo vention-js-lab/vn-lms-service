@@ -1,18 +1,18 @@
 import { z } from 'zod';
 
 export const envConfigSchema = z.object({
-  NODE_ENV: z.enum(['development', 'test', 'production']).default('development'),
+  APP_ENV: z.enum(['development', 'test', 'production']).default('development'),
   APP_PORT: z.coerce.number().int().min(1).max(65535).default(8050),
 
-  DB_HOST: z.string().min(1),
-  DB_PORT: z.coerce.number().int().min(1).max(65535),
-  DB_NAME: z.string().min(1),
-  DB_USER: z.string().min(1),
-  DB_PASSWORD: z.string().min(1),
+  DATABASE_HOST: z.string().min(1),
+  DATABASE_PORT: z.coerce.number().int().min(1).max(65535),
+  DATABASE_NAME: z.string().min(1),
+  DATABASE_USER: z.string().min(1),
+  DATABASE_PASSWORD: z.string().min(1),
 
-  MAIL_HOST: z.string().min(1),
-  MAIL_PORT: z.coerce.number().int().min(1).max(65535),
-  MAIL_FROM: z.string().min(3),
+  MAIL_SMTP_HOST: z.string().min(1),
+  MAIL_SMTP_PORT: z.coerce.number().int().min(1).max(65535),
+  MAIL_WEB_PORT: z.coerce.number().int().min(1).max(65535),
 });
 
 export type EnvConfig = z.infer<typeof envConfigSchema>;
