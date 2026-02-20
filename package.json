@@ -22,7 +22,7 @@
     "db:up": "sequelize-cli db:migrate && npm run db:prisma:sync",
     "db:down": "sequelize-cli db:migrate:undo && npm run db:prisma:sync",
     "db:down:all": "sequelize-cli db:migrate:undo:all && npm run db:prisma:sync",
-    "db:prisma:studio":"npx prisma studio"
+    "db:studio":"npx prisma studio"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.14",

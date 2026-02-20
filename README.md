@@ -111,8 +111,8 @@ You can roll back all migrations with:
 ```bash
 npm run db:down:all
 ```
-You can start prisma studio with:
+You can start database studio with:
 
 ```bash
-npm run db:prisma:studio
+npm run db:studio
 ```
