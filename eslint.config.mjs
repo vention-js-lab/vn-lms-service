@@ -22,7 +22,6 @@ const ignoresConfig = {
     '**/*.d.ts',
     'sequelize.config.cjs',
   ],
-  
 };
 
 /** @type {import('eslint').Linter.Config}*/
@@ -373,7 +372,6 @@ const prismaConfigOverride = {
   },
 };
 
-
 export default defineConfig(
   ignoresConfig,
   eslint.configs.recommended,
@@ -381,5 +379,5 @@ export default defineConfig(
   mainConfig,
   jestConfig,
   pluginPrettierConfig,
-  prismaConfigOverride
+  prismaConfigOverride,
 );
