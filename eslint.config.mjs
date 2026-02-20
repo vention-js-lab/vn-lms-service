@@ -21,8 +21,9 @@ const ignoresConfig = {
     'node_modules/**',
     '**/*.d.ts',
     'sequelize.config.cjs',
+    "src/modules/database/generated/**",
   ],
-  
+
 };
 
 /** @type {import('eslint').Linter.Config}*/
