@@ -17,9 +17,9 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "migration:create": "npx sequelize-cli migration:generate --migrations-path migrations/files --name",
-    "migration:up": "npx sequelize-cli db:migrate --config migrations/database.config.cjs --migrations-path migrations/files",
-    "migration:down": "npx sequelize-cli db:migrate:undo --config migrations/database.config.cjs --migrations-path migrations/files",
+    "migrate:create": "npx sequelize-cli migration:generate --migrations-path migrations/files --name",
+    "migrate:up": "npx sequelize-cli db:migrate --config migrations/database.config.cjs --migrations-path migrations/files",
+    "migrate:down": "npx sequelize-cli db:migrate:undo --config migrations/database.config.cjs --migrations-path migrations/files",
     "database:view": "npx drizzle-kit studio --port 8059"
   },
   "dependencies": {
