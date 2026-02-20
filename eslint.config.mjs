@@ -20,7 +20,10 @@ const ignoresConfig = {
     'coverage/**',
     'node_modules/**',
     '**/*.d.ts',
+    'sequelize.config.cjs',
+    "drizzle.config.ts",
   ],
+
 };
 
 /** @type {import('eslint').Linter.Config}*/
@@ -363,6 +366,15 @@ const jestConfig = {
   },
 };
 
+/** @type {import('eslint').Linter.Config} */
+const prismaConfigOverride = {
+  files: ['prisma.config.ts'],
+  rules: {
+    'import/no-default-export': 'off',
+  },
+};
+
+
 export default defineConfig(
   ignoresConfig,
   eslint.configs.recommended,
@@ -370,4 +382,5 @@ export default defineConfig(
   mainConfig,
   jestConfig,
   pluginPrettierConfig,
+  prismaConfigOverride
 );
