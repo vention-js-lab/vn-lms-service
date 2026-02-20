@@ -5,3 +5,33 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Users {
+  id         String            @id @db.Uuid
+  email      String            @unique @db.VarChar(255)
+  first_name String?           @db.VarChar(255)
+  last_name  String?           @db.VarChar(255)
+  password   String            @db.VarChar(255)
+  role       enum_Users_role   @default(STUDENT)
+  status     enum_Users_status @default(ACTIVE)
+  deleted_at DateTime?         @db.Timestamptz(6)
+  created_at DateTime          @default(now()) @db.Timestamptz(6)
+  updated_at DateTime          @default(now()) @db.Timestamptz(6)
+}
+
+model sequelize_meta {
+  name String @id @db.VarChar(255)
+}
+
+enum enum_Users_role {
+  ADMIN
+  HR
+  INSTRUCTOR
+  STUDENT
+}
+
+enum enum_Users_status {
+  ACTIVE
+  INVITED
+  DISABLED
+}

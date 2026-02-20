@@ -27,6 +27,7 @@
     "@nestjs/common": "^11.1.14",
     "@nestjs/config": "^4.0.3",
     "@nestjs/core": "^11.1.14",
+    "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^11.1.14",
     "@prisma/adapter-pg": "^7.4.0",
     "@prisma/client": "^7.4.0",
