@@ -37,4 +37,3 @@ coverage/
 # misc
 tmp/
 .temp/
-src/modules/database/generated/

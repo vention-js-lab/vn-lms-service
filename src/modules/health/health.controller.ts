@@ -8,7 +8,7 @@ export class HealthController {
   @Get()
   async health() {
     try {
-      await this.databaseService.$queryRaw`SELECT 1`;
+      await this.databaseService.db.execute('SELECT 1');
 
       return {
         status: 'ok',
