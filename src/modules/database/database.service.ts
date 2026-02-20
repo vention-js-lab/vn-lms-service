@@ -2,22 +2,23 @@ import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { PrismaPg } from '@prisma/adapter-pg';
 import { PrismaClient } from '@prisma/client';
-import { buildDatabaseUrl, type EnvConfig } from '#/shared/configs';
+import { type EnvConfig } from '#/shared/configs';
 
 @Injectable()
 export class DatabaseService extends PrismaClient implements OnModuleInit, OnModuleDestroy {
   constructor(private readonly configService: ConfigService<EnvConfig, true>) {
-    const connectionString = buildDatabaseUrl({
-      DATABASE_HOST: configService.get('DATABASE_HOST', { infer: true }),
-      DATABASE_PORT: configService.get('DATABASE_PORT', { infer: true }),
-      DATABASE_NAME: configService.get('DATABASE_NAME', { infer: true }),
-      DATABASE_USER: configService.get('DATABASE_USER', { infer: true }),
-      DATABASE_PASSWORD: configService.get('DATABASE_PASSWORD', { infer: true }),
-    });
+    const host = configService.get('DATABASE_HOST', { infer: true });
+    const port = configService.get('DATABASE_PORT', { infer: true });
+    const name = configService.get('DATABASE_NAME', { infer: true });
+    const user = configService.get('DATABASE_USER', { infer: true });
+    const password = configService.get('DATABASE_PASSWORD', { infer: true });
+
+    const connectionString = `postgresql://${user}:${password}@${host}:${port}/${name}?schema=public`;
 
     const adapter = new PrismaPg({
       connectionString,
     });
+
     super({ adapter });
   }
 

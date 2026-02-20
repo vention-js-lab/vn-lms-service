@@ -1,4 +1,6 @@
-require('dotenv').config();
+require('dotenv').config({
+  quiet: true,
+});
 
 const base = {
   username: process.env.DATABASE_USER,

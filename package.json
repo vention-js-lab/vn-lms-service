@@ -5,7 +5,7 @@
   "license": "UNLICENSED",
   "scripts": {
     "prepare": "husky",
-    "postinstall": "npm run prepare",
+    "postinstall": "npm run prepare && npm run database:generate",
     "build": "nest build",
     "start": "nest start",
     "dev": "nest start --watch",
@@ -17,12 +17,12 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
-    "db:migration:create": "sequelize-cli migration:generate --name",
-    "db:prisma:sync": "prisma db pull && prisma generate",
-    "db:up": "sequelize-cli db:migrate && npm run db:prisma:sync",
-    "db:down": "sequelize-cli db:migrate:undo && npm run db:prisma:sync",
-    "db:down:all": "sequelize-cli db:migrate:undo:all && npm run db:prisma:sync",
-    "db:studio":"npx prisma studio"
+    "migration:create": "npx sequelize-cli migration:generate --migrations-path migrations/files --name",
+    "migration:up": "npx sequelize-cli db:migrate --config migrations/database.config.cjs --migrations-path migrations/files",
+    "migration:down": "npx sequelize-cli db:migrate:undo --config migrations/database.config.cjs --migrations-path migrations/files",
+    "database:generate": "npx prisma generate",
+    "database:view": "npx prisma studio",
+    "database:validate": "npx prisma validate"
   },
   "dependencies": {
     "@nestjs/common": "^11.1.14",
