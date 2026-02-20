@@ -106,3 +106,13 @@ You can rollback the last migration with:
 npm run db:down
 ```
 
+You can roll back all migrations with:
+
+```bash
+npm run db:down:all
+```
+You can start prisma studio with:
+
+```bash
+npm run db:prisma:studio
+```
