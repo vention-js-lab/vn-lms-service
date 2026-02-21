@@ -21,6 +21,7 @@ const ignoresConfig = {
     'node_modules/**',
     '**/*.d.ts',
     'sequelize.config.cjs',
+    'drizzle.config.ts',
   ],
 };
 

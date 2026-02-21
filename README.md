@@ -7,6 +7,7 @@ Minimal backend foundation for VN LMS.
 - NestJS
 - Zod (env validation)
 - Postgres 17.8 (Docker)
+- Postgres 17.8 (Docker)
 - MailHog (local email testing)
 - ESLint + Prettier (code quality & formatting)
 - Husky (Git hooks)
@@ -35,9 +36,10 @@ npm install
 npm run dev
 ```
 
-## Health Checks the API and DB is running correctly.
+## Health Checks the API and DB is running correctly.s the API and DB is running correctly.
 
 ```bash
+GET http://localhost:8050/health
 GET http://localhost:8050/health
 ```
 
@@ -60,6 +62,7 @@ Create new migration with running:
 ```bash
 npm run db:migration:create <migration-name>
 ```
+
 Edit the generated migration file in `src/migrations` to define the schema changes.
 
 ```js
@@ -95,14 +98,27 @@ module.exports = {
   },
 };
 ```
+
 Apply the migrations to the prisma schema and database with:
 
 ```bash
 npm run db:up
 ```
+
 You can rollback the last migration with:
 
 ```bash
 npm run db:down
 ```
 
+You can roll back all migrations with:
+
+```bash
+npm run db:down:all
+```
+
+You can start database studio with:
+
+```bash
+npm run db:studio
+```
