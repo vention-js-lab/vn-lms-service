@@ -36,13 +36,13 @@ export class UsersRepository {
     return result[0];
   }
 
-  async update(id: string, data: Partial<NewUser>): Promise<User> {
+  async update(id: string, data: Partial<NewUser>): Promise<User | null> {
     const result = await this.databaseService.db.update(users).set(data).where(eq(users.id, id)).returning();
 
     return result[0];
   }
 
-  async delete(id: string): Promise<User> {
+  async delete(id: string): Promise<User | null> {
     const result = await this.databaseService.db.delete(users).where(eq(users.id, id)).returning();
 
     return result[0];
