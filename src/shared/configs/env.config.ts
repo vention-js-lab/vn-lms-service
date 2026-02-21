@@ -13,6 +13,10 @@ export const envConfigSchema = z.object({
   MAIL_SMTP_HOST: z.string().min(1),
   MAIL_SMTP_PORT: z.coerce.number().int().min(1).max(65535),
   MAIL_WEB_PORT: z.coerce.number().int().min(1).max(65535),
+
+  JWT_SECRET: z.string().min(1),
+  JWT_ACCESS_TOKEN_EXPIRES_IN: z.string().min(1),
+  JWT_REFRESH_TOKEN_EXPIRES_IN: z.string().min(1),
 });
 
 export type EnvConfig = z.infer<typeof envConfigSchema>;
