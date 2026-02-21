@@ -77,7 +77,7 @@ describe('AuthService', () => {
     it('returns tokens for valid credentials', async () => {
       jest.spyOn(mockUsersRepository, 'findByEmail').mockResolvedValueOnce(user);
       jest.spyOn(Hasher, 'verify').mockResolvedValueOnce(true);
-      const generateTokensSpy = jest.spyOn(authService, 'generateTokens').mockResolvedValueOnce({
+      const generateTokensSpy = jest.spyOn(authService, 'generateTokens').mockReturnValue({
         accessToken: 'access-token',
         refreshToken: 'refresh-token',
       });
@@ -96,7 +96,7 @@ describe('AuthService', () => {
   });
 
   describe('generateTokens', () => {
-    it('signs and returns access and refresh tokens', async () => {
+    it('signs and returns access and refresh tokens', () => {
       jest.spyOn(mockConfigService, 'get').mockReturnValueOnce('jwt-secret').mockReturnValueOnce('15m').mockReturnValueOnce('7d');
       jest.spyOn(mockJwtService, 'sign').mockReturnValueOnce('access-token').mockReturnValueOnce('refresh-token');
 
@@ -106,7 +106,7 @@ describe('AuthService', () => {
         role: 'STUDENT',
       };
 
-      await expect(authService.generateTokens(payload)).resolves.toEqual({
+      expect(authService.generateTokens(payload)).toEqual({
         accessToken: 'access-token',
         refreshToken: 'refresh-token',
       });
