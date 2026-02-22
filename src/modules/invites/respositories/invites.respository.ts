@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { randomUUID } from 'crypto';
 import { and, eq, gt, isNull } from 'drizzle-orm';
 import { DatabaseService } from '#/modules/database/database.service';
 import { invitesTable } from '#/modules/database/schema/index';
@@ -25,7 +24,6 @@ export class InvitesRepository {
     const [newInvite] = await this.databaseService.db
       .insert(invitesTable)
       .values({
-        id: randomUUID(),
         email: inviteData.email,
         first_name: inviteData.first_name ?? null,
         last_name: inviteData.last_name ?? null,

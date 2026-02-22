@@ -6,7 +6,7 @@ export const userRoleEnum = pgEnum('user_role', ['admin', 'hr', 'instructor', 's
 export const invitesTable = pgTable(
   'invites',
   {
-    id: uuid('id').primaryKey(),
+    id: uuid('id').defaultRandom().primaryKey(),
 
     email: varchar('email').notNull(),
 
@@ -33,3 +33,6 @@ export const invitesTable = pgTable(
     revokedIdx: index('invites_revoked_idx').on(table.revoked_at),
   }),
 );
+
+export type InvitesTableType = typeof invitesTable.$inferSelect;
+export type InvitesInsertType = typeof invitesTable.$inferInsert;
