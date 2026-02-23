@@ -17,9 +17,8 @@ export class MailService {
     await this.mailerService.sendMail({
       to,
       subject: 'You have been invited',
-      template: 'invite', // maps to invite.pug
+      template: 'invite',
       context: { inviteLink },
-      // keep text for deliverability / fallback if you want:
       text: `Use this link to accept the invite:\n\n${inviteLink}`,
     });
   }
