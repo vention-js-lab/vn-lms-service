@@ -21,7 +21,7 @@ describe('MailService', () => {
           provide: ConfigService,
           useValue: {
             get: (key: string) => {
-              if (key === 'APP_BASE_URL') return 'http://localhost:3000';
+              if (key === 'FRONTEND_BASE_URL') return 'http://localhost:3000';
               return undefined;
             },
           },
@@ -44,9 +44,11 @@ describe('MailService', () => {
     const payload = sendMailMock.mock.calls[0][0];
     expect(payload.to).toBe('user@example.com');
     expect(payload.subject).toContain('invited');
-    expect(payload.text).toContain('token=token123');
-    expect(payload.html).toContain('token=token123');
-    expect(payload.text).toContain('http://localhost:3000/invite?token=token123');
+
+    expect(payload.template).toBe('invite');
+    expect(payload.context).toEqual({
+      inviteLink: 'http://localhost:3000/invite?token=token123',
+    });
   });
 
   it('propagates errors from the mailer', async () => {
