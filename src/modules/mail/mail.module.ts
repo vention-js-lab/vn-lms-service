@@ -11,12 +11,15 @@ import { MailService } from './mail.service';
         const port = Number(config.get<string>('MAIL_SMTP_PORT') ?? '587');
         const secure = (config.get<string>('MAIL_SMTP_SECURE') ?? '').toLowerCase() === 'true';
 
+        const host = config.get<string>('MAIL_SMTP_HOST');
+        if (!host) throw new Error('MAIL_SMTP_HOST is required');
+
         const user = config.get<string>('MAIL_SMTP_USER') ?? '';
         const pass = config.get<string>('MAIL_SMTP_PASS') ?? '';
 
         return {
           transport: {
-            host: config.get<string>('MAIL_SMTP_HOST'),
+            host,
             port,
             secure,
             ...(user && pass ? { auth: { user, pass } } : {}),
