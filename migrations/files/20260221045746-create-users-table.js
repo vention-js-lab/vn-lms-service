@@ -5,11 +5,11 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     // Create enums
     await queryInterface.sequelize.query(`
-      CREATE TYPE user_role_enum AS ENUM ('ADMIN', 'HR', 'INSTRUCTOR', 'STUDENT');
+      CREATE TYPE user_role_enum AS ENUM ('admin', 'hr', 'instructor', 'student');
     `);
 
     await queryInterface.sequelize.query(`
-      CREATE TYPE user_status_enum AS ENUM ('ACTIVE', 'INVITED', 'DISABLED');
+      CREATE TYPE user_status_enum AS ENUM ('active', 'invited', 'disabled');
     `);
 
     // Create Users table
@@ -37,14 +37,14 @@ module.exports = {
         allowNull: false,
       },
       role: {
-        type: Sequelize.ENUM('ADMIN', 'HR', 'INSTRUCTOR', 'STUDENT'),
+        type: Sequelize.ENUM('admin', 'hr', 'instructor', 'student'),
         allowNull: false,
-        defaultValue: 'STUDENT',
+        defaultValue: 'student',
       },
       status: {
-        type: Sequelize.ENUM('ACTIVE', 'INVITED', 'DISABLED'),
+        type: Sequelize.ENUM('active', 'invited', 'disabled'),
         allowNull: false,
-        defaultValue: 'ACTIVE',
+        defaultValue: 'active',
       },
       deleted_at: {
         type: Sequelize.DATE,

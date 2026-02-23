@@ -1,5 +1,9 @@
+import { eq } from 'drizzle-orm';
 import { type DatabaseService } from '#/modules/database/database.service';
+import { users } from '#/modules/database/schema/user.schema';
 import { UsersRepository } from './users.repository';
+
+jest.mock('drizzle-orm', () => ({ eq: jest.fn() }));
 
 const mockUser = {
   id: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
@@ -7,8 +11,8 @@ const mockUser = {
   firstName: 'Asliddin',
   lastName: 'Tursunov',
   password: 'hashed_password',
-  role: 'STUDENT' as const,
-  status: 'ACTIVE' as const,
+  role: 'student' as const,
+  status: 'active' as const,
   deletedAt: null,
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
@@ -20,8 +24,8 @@ const mockUser2 = {
   firstName: 'Tursun',
   lastName: 'Asliddinov',
   password: 'hashed_password_2',
-  role: 'INSTRUCTOR' as const,
-  status: 'ACTIVE' as const,
+  role: 'instructor' as const,
+  status: 'active' as const,
   deletedAt: null,
   createdAt: new Date('2025-01-02'),
   updatedAt: new Date('2025-01-02'),
@@ -100,13 +104,13 @@ describe('UsersRepository', () => {
 
   describe('findAll', () => {
     it('should return all users', async () => {
-      const users = [mockUser, mockUser2];
-      dbMock.select.mockReturnValue(createSelectChain(users));
+      const allUsers = [mockUser, mockUser2];
+      dbMock.select.mockReturnValue(createSelectChain(allUsers));
 
       const result = await repository.findAll();
 
       expect(dbMock.select).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(users);
+      expect(result).toEqual(allUsers);
     });
 
     it('should return an empty array when no users exist', async () => {
@@ -193,10 +197,38 @@ describe('UsersRepository', () => {
       expect(result).toEqual(updatedUser);
     });
 
+    it('should update user status to DISABLED', async () => {
+      const updatedUser = { ...mockUser, status: 'DISABLED' as const };
+      dbMock.update.mockReturnValue(createUpdateChain([updatedUser]));
+
+      const result = await repository.update(mockUser.id, { status: 'disabled' });
+
+      expect(result?.status).toBe('DISABLED');
+    });
+
+    it('should update user role to INSTRUCTOR', async () => {
+      const updatedUser = { ...mockUser, role: 'INSTRUCTOR' as const };
+      dbMock.update.mockReturnValue(createUpdateChain([updatedUser]));
+
+      const result = await repository.update(mockUser.id, { role: 'instructor' });
+
+      expect(result?.role).toBe('INSTRUCTOR');
+    });
+
+    it('should use the id from the provided user entity', async () => {
+      const targetUser = { ...mockUser, id: 'specific-user-id' };
+      dbMock.update.mockReturnValue(createUpdateChain([targetUser]));
+
+      await repository.update(targetUser.id, { firstName: 'Updated' });
+
+      expect(eq).toHaveBeenCalledWith(users.id, 'specific-user-id');
+    });
+
     it('should return undefined when updating a non-existent user', async () => {
+      const ghost = { ...mockUser, id: 'non-existent-id' };
       dbMock.update.mockReturnValue(createUpdateChain([]));
 
-      const result = await repository.update('non-existent-id', { firstName: 'Ghost' });
+      const result = await repository.update(ghost.id, { firstName: 'Ghost' });
 
       expect(result).toBeUndefined();
     });
