@@ -1,7 +1,6 @@
-import { index, pgEnum, pgTable, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core';
-
+import { index, pgTable, timestamp, uniqueIndex, uuid, varchar } from 'drizzle-orm/pg-core';
+import { userRoleEnum } from './index';
 // MUST match your DB enum exactly
-export const userRoleEnum = pgEnum('user_role', ['admin', 'hr', 'instructor', 'student']);
 
 export const invitesTable = pgTable(
   'invites',
