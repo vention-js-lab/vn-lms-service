@@ -11,9 +11,12 @@ export class MailService {
   ) {}
 
   async sendInviteEmail(to: string, token: string): Promise<void> {
-    const baseUrl = this.configService.get('FRONTEND_BASE_URL', { infer: true });
+    if (!to?.trim()) throw new Error('Email is requried');
+    if (!token) throw new Error('Invite token is Required');
 
+    const baseUrl = this.configService.get('FRONTEND_BASE_URL', { infer: true });
     const inviteLink = `${baseUrl}/invite?token=${encodeURIComponent(token)}`;
+
     await this.mailerService.sendMail({
       to,
       subject: 'You have been invited',
