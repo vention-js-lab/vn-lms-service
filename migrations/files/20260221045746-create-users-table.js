@@ -5,11 +5,23 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     // Create enums
     await queryInterface.sequelize.query(`
-      CREATE TYPE user_role_enum AS ENUM ('admin', 'hr', 'instructor', 'student');
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') THEN
+          CREATE TYPE user_role_enum AS ENUM ('admin', 'hr', 'instructor', 'student');
+        END IF;
+      END
+      $$;
     `);
 
     await queryInterface.sequelize.query(`
-      CREATE TYPE user_status_enum AS ENUM ('active', 'invited', 'disabled');
+      DO $$
+      BEGIN
+        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_status_enum') THEN
+          CREATE TYPE user_status_enum AS ENUM ('active', 'invited', 'disabled');
+        END IF;
+      END
+      $$;
     `);
 
     // Create Users table
@@ -37,12 +49,12 @@ module.exports = {
         allowNull: false,
       },
       role: {
-        type: Sequelize.ENUM('admin', 'hr', 'instructor', 'student'),
+        type: 'user_role_enum',
         allowNull: false,
         defaultValue: 'student',
       },
       status: {
-        type: Sequelize.ENUM('active', 'invited', 'disabled'),
+        type: 'user_status_enum',
         allowNull: false,
         defaultValue: 'active',
       },
