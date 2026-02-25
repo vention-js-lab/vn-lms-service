@@ -24,9 +24,9 @@ describe('MailService', () => {
         {
           provide: ConfigService,
           useValue: {
-            get: (key: string) => {
+            getOrThrow: (key: string) => {
               if (key === 'FRONTEND_BASE_URL') return TEST_BASE_URL;
-              return undefined;
+              throw new Error(`Missing config: ${key}`);
             },
           },
         },
