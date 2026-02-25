@@ -14,7 +14,7 @@ export class MailService {
     if (!to?.trim()) throw new Error('Email is requried');
     if (!token) throw new Error('Invite token is Required');
 
-    const baseUrl = this.configService.get('FRONTEND_BASE_URL', { infer: true });
+    const baseUrl = this.configService.getOrThrow<EnvConfig['FRONTEND_BASE_URL']>('FRONTEND_BASE_URL');
     const inviteLink = `${baseUrl}/invite?token=${encodeURIComponent(token)}`;
 
     await this.mailerService.sendMail({

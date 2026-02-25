@@ -11,8 +11,8 @@ import { MailService } from './mail.service';
     MailerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (configService: ConfigService<EnvConfig>) => {
-        const host = configService.get('MAIL_SMTP_HOST', { infer: true });
-        const port = configService.get('MAIL_SMTP_PORT', { infer: true });
+        const host = configService.getOrThrow<EnvConfig['MAIL_SMTP_HOST']>('MAIL_SMTP_HOST');
+        const port = configService.getOrThrow<EnvConfig['MAIL_SMTP_PORT']>('MAIL_SMTP_PORT');
 
         return {
           transport: {
