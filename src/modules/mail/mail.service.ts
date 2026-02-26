@@ -1,0 +1,28 @@
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { MailerService } from '@nestjs-modules/mailer';
+import type { EnvConfig } from '#/shared/configs';
+
+@Injectable()
+export class MailService {
+  constructor(
+    private readonly mailerService: MailerService,
+    private readonly configService: ConfigService<EnvConfig>,
+  ) {}
+
+  async sendInviteEmail(to: string, token: string): Promise<void> {
+    if (!to?.trim()) throw new Error('Email is requried');
+    if (!token) throw new Error('Invite token is Required');
+
+    const baseUrl = this.configService.getOrThrow<EnvConfig['FRONTEND_BASE_URL']>('FRONTEND_BASE_URL');
+    const inviteLink = `${baseUrl}/invite?token=${encodeURIComponent(token)}`;
+
+    await this.mailerService.sendMail({
+      to,
+      subject: 'You have been invited',
+      template: 'invite',
+      context: { inviteLink },
+      text: `Use this link to accept the invite:\n\n${inviteLink}`,
+    });
+  }
+}
