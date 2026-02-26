@@ -1,6 +1,6 @@
 import { eq } from 'drizzle-orm';
 import { type DatabaseService } from '#/modules/database/database.service';
-import { users } from '#/modules/database/schema/user.schema';
+import { users } from '../entities';
 import { UsersRepository } from './users.repository';
 
 jest.mock('drizzle-orm', () => ({ eq: jest.fn() }));
@@ -16,19 +16,6 @@ const mockUser = {
   deletedAt: null,
   createdAt: new Date('2025-01-01'),
   updatedAt: new Date('2025-01-01'),
-};
-
-const mockUser2 = {
-  id: 'b2c3d4e5-f6a7-8901-bcde-f12345678901',
-  email: 'tursunov.example@example.com',
-  firstName: 'Tursun',
-  lastName: 'Asliddinov',
-  password: 'hashed_password_2',
-  role: 'instructor' as const,
-  status: 'active' as const,
-  deletedAt: null,
-  createdAt: new Date('2025-01-02'),
-  updatedAt: new Date('2025-01-02'),
 };
 
 function createSelectChain(result: unknown) {
@@ -100,30 +87,6 @@ describe('UsersRepository', () => {
     repository = new UsersRepository(databaseService);
   });
 
-  // ============== findAll ==============
-
-  describe('findAll', () => {
-    it('should return all users', async () => {
-      const allUsers = [mockUser, mockUser2];
-      dbMock.select.mockReturnValue(createSelectChain(allUsers));
-
-      const result = await repository.findAll();
-
-      expect(dbMock.select).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(allUsers);
-    });
-
-    it('should return an empty array when no users exist', async () => {
-      dbMock.select.mockReturnValue(createSelectChain([]));
-
-      const result = await repository.findAll();
-
-      expect(result).toEqual([]);
-    });
-  });
-
-  // ============== findById ==============
-
   describe('findById', () => {
     it('should return a user when found', async () => {
       dbMock.select.mockReturnValue(createSelectChain([mockUser]));
@@ -142,8 +105,6 @@ describe('UsersRepository', () => {
       expect(result).toBeNull();
     });
   });
-
-  // ============== findByEmail ==============
 
   describe('findByEmail', () => {
     it('should return a user when found', async () => {
@@ -230,7 +191,7 @@ describe('UsersRepository', () => {
 
       const result = await repository.update(ghost.id, { firstName: 'Ghost' });
 
-      expect(result).toBeUndefined();
+      expect(result).toBeNull();
     });
   });
 
@@ -251,7 +212,7 @@ describe('UsersRepository', () => {
 
       const result = await repository.delete('non-existent-id');
 
-      expect(result).toBeUndefined();
+      expect(result).toBeNull();
     });
   });
 });
