@@ -1,91 +1,63 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
+
 module.exports = {
-  async up(queryInterface, Sequelize) {
-    // Create enums
-    await queryInterface.sequelize.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_role_enum') THEN
+  async up(queryInterface) {
+    return queryInterface.sequelize.transaction(async (transaction) => {
+      await queryInterface.sequelize.query(`CREATE EXTENSION IF NOT EXISTS "pgcrypto";`, { transaction });
+
+      await queryInterface.sequelize.query(
+        `
+        DO $$
+        BEGIN
           CREATE TYPE user_role_enum AS ENUM ('admin', 'hr', 'instructor', 'student');
-        END IF;
-      END
-      $$;
-    `);
+        EXCEPTION
+          WHEN duplicate_object THEN NULL;
+        END
+        $$;
+        `,
+        { transaction },
+      );
 
-    await queryInterface.sequelize.query(`
-      DO $$
-      BEGIN
-        IF NOT EXISTS (SELECT 1 FROM pg_type WHERE typname = 'user_status_enum') THEN
-          CREATE TYPE user_status_enum AS ENUM ('active', 'invited', 'disabled');
-        END IF;
-      END
-      $$;
-    `);
+      await queryInterface.sequelize.query(
+        `
+        DO $$
+        BEGIN
+          CREATE TYPE user_status_enum AS ENUM ('active', 'disabled');
+        EXCEPTION
+          WHEN duplicate_object THEN NULL;
+        END
+        $$;
+        `,
+        { transaction },
+      );
 
-    // Create Users table
-    await queryInterface.createTable('Users', {
-      id: {
-        type: Sequelize.UUID,
-        primaryKey: true,
-        defaultValue: Sequelize.UUIDV4,
-      },
-      email: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-        unique: true,
-      },
-      first_name: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      last_name: {
-        type: Sequelize.STRING(255),
-        allowNull: true,
-      },
-      password: {
-        type: Sequelize.STRING(255),
-        allowNull: false,
-      },
-      role: {
-        type: 'user_role_enum',
-        allowNull: false,
-        defaultValue: 'student',
-      },
-      status: {
-        type: 'user_status_enum',
-        allowNull: false,
-        defaultValue: 'active',
-      },
-      deleted_at: {
-        type: Sequelize.DATE,
-        allowNull: true,
-      },
-      created_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-      },
-      updated_at: {
-        type: Sequelize.DATE,
-        allowNull: false,
-        defaultValue: Sequelize.literal('CURRENT_TIMESTAMP'),
-      },
+      await queryInterface.sequelize.query(
+        `
+        CREATE TABLE IF NOT EXISTS users (
+          id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+          email VARCHAR(255) NOT NULL UNIQUE,
+          first_name VARCHAR(255),
+          last_name VARCHAR(255),
+          password VARCHAR(255) NOT NULL,
+          role user_role_enum NOT NULL DEFAULT 'student',
+          status user_status_enum NOT NULL DEFAULT 'active',
+          deleted_at TIMESTAMP WITH TIME ZONE NULL,
+          created_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+        `,
+        { transaction },
+      );
     });
   },
 
-  async down(queryInterface, Sequelize) {
-    // Drop Users table
-    await queryInterface.dropTable('Users');
-
-    // Drop enums
-    await queryInterface.sequelize.query(`
-      DROP TYPE IF EXISTS user_role_enum;
-    `);
-
-    await queryInterface.sequelize.query(`
-      DROP TYPE IF EXISTS user_status_enum;
-    `);
+  async down(queryInterface) {
+    return queryInterface.sequelize.transaction(async (transaction) => {
+      await queryInterface.sequelize.query(`DROP TABLE IF EXISTS users;`, { transaction });
+      await queryInterface.sequelize.query(`DROP TYPE IF EXISTS user_status_enum;`, { transaction });
+      await queryInterface.sequelize.query(`DROP TYPE IF EXISTS user_role_enum;`, { transaction });
+    });
   },
 };
