@@ -1,20 +1,25 @@
-import { pgEnum, pgTable, timestamp, uuid, varchar } from 'drizzle-orm/pg-core';
+import { pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 
-export const userRoleEnum = pgEnum('user_role_enum', ['admin', 'hr', 'instructor', 'student']);
+const userRoleEnum = pgEnum('user_role_enum', ['admin', 'hr', 'instructor', 'student']);
+export type UserRole = (typeof userRoleEnum.enumValues)[number];
+
 export const userStatusEnum = pgEnum('user_status_enum', ['active', 'disabled']);
+export type UserStatus = (typeof userStatusEnum.enumValues)[number];
 
 export const users = pgTable('users', {
   id: uuid('id').defaultRandom().primaryKey(),
-  email: varchar('email', { length: 255 }).notNull().unique(),
-  firstName: varchar('first_name', { length: 255 }),
-  lastName: varchar('last_name', { length: 255 }),
-  password: varchar('password', { length: 255 }).notNull(),
-  role: userRoleEnum('role').notNull().default('student'),
-  status: userStatusEnum('status').notNull().default('active'),
+  email: text('email').notNull().unique(),
+  firstName: text('first_name').notNull(),
+  lastName: text('last_name').notNull(),
+  password: text('password').notNull(),
+  role: userRoleEnum('role').notNull(),
+  status: userStatusEnum('status').notNull(),
   deletedAt: timestamp('deleted_at', { withTimezone: true, mode: 'date' }),
   createdAt: timestamp('created_at', { withTimezone: true, mode: 'date' }).notNull().defaultNow(),
   updatedAt: timestamp('updated_at', { withTimezone: true, mode: 'date' }).notNull().defaultNow(),
 });
 
 export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
+
+export type CreateUserParams = typeof users.$inferInsert;
+export type UpdateUserParams = Partial<Omit<typeof users.$inferInsert, 'id'>> & { id: string };

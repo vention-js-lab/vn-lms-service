@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { eq, type InferInsertModel, type InferSelectModel } from 'drizzle-orm';
+import { eq } from 'drizzle-orm';
 import { DatabaseService } from '#/modules/database/database.service';
-import { users } from '#/modules/database/schema';
-
-type User = InferSelectModel<typeof users>;
-type NewUser = InferInsertModel<typeof users>;
+import { CreateUserParams, UpdateUserParams, User, users } from '#/modules/users/entities';
 
 @Injectable()
 export class UsersRepository {
@@ -22,13 +19,13 @@ export class UsersRepository {
     return result.length > 0 ? result[0] : null;
   }
 
-  async create(data: NewUser): Promise<User | null> {
+  async create(data: CreateUserParams): Promise<User | null> {
     const result = await this.databaseService.db.insert(users).values(data).returning();
 
     return result.length > 0 ? result[0] : null;
   }
 
-  async update(id: string, data: Partial<NewUser>): Promise<User | null> {
+  async update(id: string, data: UpdateUserParams): Promise<User | null> {
     const result = await this.databaseService.db.update(users).set(data).where(eq(users.id, id)).returning();
 
     return result.length > 0 ? result[0] : null;
