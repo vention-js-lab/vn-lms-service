@@ -1,25 +1,21 @@
 import { Injectable } from '@nestjs/common';
 import { and, eq, gt, isNull } from 'drizzle-orm';
 import { DatabaseService } from '#/modules/database/database.service';
-import { invitesTable } from '#/modules/database/schema/index';
-import { InvitesTableType } from '#/shared/types/index';
+import { invitesTable, InvitesTableType } from '../entities/invites.entity';
 
 @Injectable()
 export class InvitesRepository {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  // ----- function to get all invites-----
   async getAllInvites() {
     return this.databaseService.db.select().from(invitesTable);
   }
 
-  // ----- function to get invite by id-----
   async getInviteById(id: string) {
     const rows = await this.databaseService.db.select().from(invitesTable).where(eq(invitesTable.id, id)).limit(1);
     return rows[0] ?? null;
   }
 
-  // ----- function to create a new invite -----
   async createInvite(inviteData: Omit<InvitesTableType, 'id' | 'created_at' | 'used_at' | 'revoked_at'>) {
     const [newInvite] = await this.databaseService.db
       .insert(invitesTable)
@@ -28,7 +24,7 @@ export class InvitesRepository {
         first_name: inviteData.first_name ?? null,
         last_name: inviteData.last_name ?? null,
         role: inviteData.role,
-        token: inviteData.token, // already HASHED in SERVICE LAYER
+        token: inviteData.token,
         expires_at: inviteData.expires_at,
         created_at: new Date(),
       })
@@ -36,7 +32,6 @@ export class InvitesRepository {
 
     return newInvite;
   }
-  // ----- function to update an invite -----
   async updateInvite(id: string, updateData: Partial<Omit<InvitesTableType, 'id' | 'created_at' | 'token'>>) {
     const patch: Partial<InvitesTableType> = { ...updateData };
     const [updatedInvite] = await this.databaseService.db
@@ -47,7 +42,6 @@ export class InvitesRepository {
     return updatedInvite ?? null;
   }
 
-  // ----- function to get invite by token (VALID only: not expired, not used, not revoked) -----
   async getValidInviteByToken(tokenHash: string) {
     const now = new Date();
     const rows = await this.databaseService.db
@@ -65,7 +59,6 @@ export class InvitesRepository {
     return rows[0] ?? null;
   }
 
-  // ----- function to revoke an invite -----
   async revokeInvite(id: string) {
     const [revokedInvite] = await this.databaseService.db
       .update(invitesTable)
@@ -75,7 +68,6 @@ export class InvitesRepository {
     return revokedInvite ?? null;
   }
 
-  // ----- function to mark an invite as used (single-use) -----
   async markInviteUsed(id: string) {
     const now = new Date();
     const [usedInvite] = await this.databaseService.db
@@ -90,10 +82,9 @@ export class InvitesRepository {
         ),
       )
       .returning();
-    return usedInvite ?? null; // null means "already used / revoked / expired"
+    return usedInvite ?? null;
   }
 
-  // ----- function to consume invite by token (transaction-safe: validate + mark used) -----
   async consumeInviteByToken(tokenHash: string) {
     return this.databaseService.db.transaction(async (tx) => {
       const now = new Date();

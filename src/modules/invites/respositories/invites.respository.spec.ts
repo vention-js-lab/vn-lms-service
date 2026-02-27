@@ -1,6 +1,6 @@
 import type { DatabaseService } from '#/modules/database/database.service';
 import { invitesTable } from '#/modules/database/schema';
-import type { InvitesTableType } from '#/shared/types';
+import { type InvitesTableType } from '../entities/invites.entity';
 import { InvitesRepository } from './invites.respository';
 
 type DbMock = {
@@ -34,10 +34,6 @@ describe('InvitesRepository', () => {
     jest.clearAllMocks();
   });
 
-  // ---------------------------------------------------------------------------
-  // getAllInvites
-  // ---------------------------------------------------------------------------
-
   it('gets all invites', async () => {
     const from = jest.fn().mockResolvedValue([{ id: 'id-1' }, { id: 'id-2' }]);
     db.select.mockReturnValue({ from });
@@ -57,10 +53,6 @@ describe('InvitesRepository', () => {
 
     expect(result).toEqual([]);
   });
-
-  // ---------------------------------------------------------------------------
-  // getInviteById
-  // ---------------------------------------------------------------------------
 
   it('gets invite by id', async () => {
     const limit = jest.fn().mockResolvedValue([{ id: 'id-1' }]);
@@ -99,10 +91,6 @@ describe('InvitesRepository', () => {
     expect(limit).toHaveBeenCalledWith(1);
   });
 
-  // ---------------------------------------------------------------------------
-  // createInvite
-  // ---------------------------------------------------------------------------
-
   it('creates invites with pre-hashed token', async () => {
     const returning = jest.fn().mockResolvedValue([{ id: 'id-1', token: 'hashed:plain' }]);
     const values = jest.fn().mockReturnValue({ returning });
@@ -134,10 +122,8 @@ describe('InvitesRepository', () => {
 
     await repo.createInvite({
       email: 'a@b.com',
-      // @ts-expect-error intentionally omitted
-      first_name: undefined,
-      // @ts-expect-error intentionally omitted
-      last_name: undefined,
+      first_name: null,
+      last_name: null,
       role: 'student',
       token: 'hashed:plain',
       expires_at: new Date('2030-01-01T00:00:00.000Z'),
@@ -185,10 +171,6 @@ describe('InvitesRepository', () => {
     ).rejects.toThrow('db failed');
   });
 
-  // ---------------------------------------------------------------------------
-  // updateInvite
-  // ---------------------------------------------------------------------------
-
   it('updates invite fields', async () => {
     const returning = jest.fn().mockResolvedValue([{ id: 'id-1', email: 'x@y.com' }]);
     const where = jest.fn().mockReturnValue({ returning });
@@ -225,10 +207,6 @@ describe('InvitesRepository', () => {
     await expect(repo.updateInvite('id-1', patch)).rejects.toThrow('update failed');
   });
 
-  // ---------------------------------------------------------------------------
-  // getValidInviteByToken
-  // ---------------------------------------------------------------------------
-
   it('finds valid invites by token hash', async () => {
     const limit = jest.fn().mockResolvedValue([{ id: 'id-1' }]);
     const where = jest.fn().mockReturnValue({ limit });
@@ -264,10 +242,6 @@ describe('InvitesRepository', () => {
     await expect(repo.getValidInviteByToken('hashed:plain')).rejects.toThrow('select failed');
   });
 
-  // ---------------------------------------------------------------------------
-  // revokeInvite
-  // ---------------------------------------------------------------------------
-
   it('revokes invites', async () => {
     const returning = jest.fn().mockResolvedValue([{ id: 'id-1' }]);
     const where = jest.fn().mockReturnValue({ returning });
@@ -302,10 +276,6 @@ describe('InvitesRepository', () => {
     await expect(repo.revokeInvite('id-1')).rejects.toThrow('revoke failed');
   });
 
-  // ---------------------------------------------------------------------------
-  // markInviteUsed
-  // ---------------------------------------------------------------------------
-
   it('marks invites used when valid', async () => {
     const returning = jest.fn().mockResolvedValue([{ id: 'id-1' }]);
     const where = jest.fn().mockReturnValue({ returning });
@@ -338,10 +308,6 @@ describe('InvitesRepository', () => {
 
     await expect(repo.markInviteUsed('id-1')).rejects.toThrow('mark used failed');
   });
-
-  // ---------------------------------------------------------------------------
-  // consumeInviteByToken
-  // ---------------------------------------------------------------------------
 
   it('consumes invite by token hash transactionally', async () => {
     const txSelectLimit = jest.fn().mockResolvedValue([{ id: 'id-1', token: 'hashed:plain' }]);

@@ -1,6 +1,6 @@
 import { pgEnum, pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
+import { userRoleEnum } from '#/modules/database/schema';
 
-const userRoleEnum = pgEnum('user_role_enum', ['admin', 'hr', 'instructor', 'student']);
 export type UserRole = (typeof userRoleEnum.enumValues)[number];
 
 export const userStatusEnum = pgEnum('user_status_enum', ['active', 'disabled']);
