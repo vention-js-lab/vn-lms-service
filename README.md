@@ -29,7 +29,7 @@ cp .env.example .env
 ```
 
 ### 3. Start API
-
+ 
 ```bash
 npm install
 npm run dev
